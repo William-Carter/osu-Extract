@@ -3,7 +3,9 @@ Extract the songs from your osu! libary into proper mp3 form, complete with meta
 
 # Requirements
 [python3](https://www.python.org/downloads/)
+
 [mutagen](https://mutagen.readthedocs.io/en/latest/)
+
 [pillow](https://pillow.readthedocs.io/en/stable/installation.html)
 
 # Usage
