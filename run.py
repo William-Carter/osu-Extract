@@ -1,12 +1,17 @@
 import getSongs
 import generateMP3
-songsDirectory = "D:\\Downloads\\osu!\\Songs"
-outputDirectory = "D:\\osuSongsExtract\\out"
+songsDirectory = ""
+outputDirectory = ""
 
-songs = getSongs.getSongs(songsDirectory)
+songs, unused = getSongs.getSongs(songsDirectory)
+print(f"{len(unused)} items were ignored")
+for item in unused:
+    print("\t", item)
+
+songsLen = len(songs)
+count = 1
 for song in songs:
-    print("Generating %s" % song.folder)
+    print("(%s of %s) Generating %s" % (count, songsLen, song.folder))
     generateMP3.generateMP3(song, outputDirectory)
+    count += 1
 
-
-    

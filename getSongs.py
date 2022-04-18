@@ -14,17 +14,28 @@ class Song:
 
     def Useable(self, folder):
         useable = True
-        osucount = 0
-        mp3count = 0
+        osuFiles = []
+        audioFiles = []
         for item in os.listdir(folder):
-            if ".osu" in item:
-                osucount += 1
-            if ".mp3" in item:
-                mp3count += 1
-        if osucount == 0:
+            if ".osu" == item[-4:].lower():
+                osuFiles.append(item)
+            if ".mp3" == item[-4:].lower():
+                audioFiles.append(item)
+
+
+        if len(osuFiles) == 0:
             useable = False
-        if mp3count == 0:
-            useable = False
+        elif len(audioFiles) == 0:
+            with open(folder+"/"+osuFiles[0], "r", encoding='utf8') as f:
+                for line in f.readlines():
+                    if line[:14] == "AudioFilename:":
+                        if not os.path.isfile(folder+"/"+line[14:].strip()):
+                            useable = False
+                        else:
+                            useable = True
+
+                        break
+                            
 
         return useable
 
@@ -98,15 +109,20 @@ def getSongs(songsFolder):
     songs = []
     many = len(os.listdir(songsFolder))
     count = 1
+    unusedItems = []
     for item in os.listdir(songsFolder):
-
-        print("(%s of %s) Viewing %s" % (count, many, item))
-        if not os.path.isfile(item):
+        
+        print("(%s of %s) Reading %s" % (count, many, item))
+        if not os.path.isfile(songsFolder+"/"+item):
             workingSong = Song(songsFolder+"/"+item)
             if not workingSong.unuseable:
                 songs.append(workingSong)
+            else:
+                unusedItems.append(item)
+        else:
+            unusedItems.append(item)
         count += 1
 
 
-    return songs
+    return songs, unusedItems
 
